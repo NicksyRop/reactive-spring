@@ -1,9 +1,12 @@
 package com.reactive.learning.reactive;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 import reactor.util.function.Tuple2;
 
@@ -116,9 +119,21 @@ class ReactiveApplicationTests {
 	}
 
 	@Data
-	private static class Player {
-		private final String firstName;
-		private final String lastName;
+	@AllArgsConstructor
+	private  class Player {
+		private  String firstName;
+		private  String lastName;
+	}
+
+	@Test
+	public void flatTest(){
+		Flux<Player> playerFlux = Flux.just("Michael Jordan", "Scottie Pippen", "Steve Kerr")
+				.flatMap(Mono::just)
+				.map(p -> {
+					String [] split = p.split(" ");
+					return  new Player( split[0] ,split[1]);
+				} )
+				.subscribeOn(Schedulers.parallel());
 	}
 
 }
