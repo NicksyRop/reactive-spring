@@ -1,5 +1,6 @@
 package com.reactive.learning.reactive;
 
+import lombok.Data;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Flux;
@@ -84,6 +85,40 @@ class ReactiveApplicationTests {
 		Flux<Tuple2<String,String  >> zippedFluxes = Flux.zip(characterFlux,foodFlux);
 		zippedFluxes.subscribe(System.out::println);
 
+	}
+	@Test
+	public  void fluxSkip(){
+		Flux<String> fruitFlux = Flux.just("Apple", "Orange", "Grape", "Banana", "Strawberry").skip(2);
+		fruitFlux.subscribe(System.out::println);
+
+	}
+	@Test
+	public void fluxTake(){
+		Flux<String> fruitFlux = Flux.just("Apple", "Orange", "Grape", "Banana", "Strawberry").take(4);
+		fruitFlux.subscribe(System.out::println);
+	}
+
+	@Test
+	public  void fluxFilter(){
+		Flux<String> fruitFlux = Flux.just("Apple", "Orange", "Grape", "Banana", "Strawberry").filter(
+				ff -> !ff.contains(" ")
+		);
+		fruitFlux.subscribe(System.out::println);
+	}
+	@Test
+	public void map(){
+		Flux<Player>  playersFlux = Flux.just("Michael Jordan", "Scottie Pippen", "Steve Kerr")
+				.map(s -> {
+					String [] split = s.split(" ");
+					return  new Player(split[0] ,split[1]);
+				});
+		playersFlux.subscribe(System.out::println);
+	}
+
+	@Data
+	private static class Player {
+		private final String firstName;
+		private final String lastName;
 	}
 
 }
