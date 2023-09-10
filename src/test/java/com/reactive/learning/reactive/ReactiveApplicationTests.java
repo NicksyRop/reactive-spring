@@ -135,5 +135,22 @@ class ReactiveApplicationTests {
 				} )
 				.subscribeOn(Schedulers.parallel());
 	}
+	@Test
+	public void fluxAll(){
+		Flux<String>  wordsWithK = Flux.just("aardvark", "elephant", "koala", "eagle", "kangaroo");
+		Mono<Boolean> hask = wordsWithK.all(s -> s.contains("a"));
+		StepVerifier.create(hask)
+				.expectNext(true)
+				.verifyComplete();
+	}
+
+	@Test
+	public  void  fluxAny(){
+		Flux<String> names = Flux.just("aardvark", "elephant", "koala", "eagle", "kangaroo");
+		Mono<Boolean> hasK = names.any(s -> s.contains("k"));
+		StepVerifier.create(hasK)
+				.expectNext(true)
+				.verifyComplete();
+	}
 
 }
